@@ -200,9 +200,6 @@ Contributions and suggestions are welcome.
 4. Run the available lint and build checks.
 5. Submit a pull request describing your changes.
 
-## 📄 License
-
-No license has been specified in this repository's documentation. Add a `LICENSE` file if you intend to distribute the project under an open-source license.
 
 ## 👨‍💻 Author
 
