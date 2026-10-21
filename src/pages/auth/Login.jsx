@@ -94,7 +94,7 @@ export function Login() {
   return (
     <div className="w-full max-w-md p-8 bg-[#0a0a0a]/80 backdrop-blur-2xl border border-white/10 rounded-3xl shadow-2xl">
       <div className="flex justify-center mb-8">
-        <Link to="/" className="w-12 h-12 rounded-2xl bg-gradient-to-br from-sky-400 to-teal-400 p-[1px]">
+        <Link to="/" className="w-12 h-12 rounded-2xl bg-linear-to-br from-sky-400 to-teal-400 p-px">
           <div className="w-full h-full rounded-2xl bg-[#0a0a0a] flex items-center justify-center">
             <svg className="w-6 h-6 text-sky-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
