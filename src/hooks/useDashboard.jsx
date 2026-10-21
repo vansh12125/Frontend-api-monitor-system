@@ -11,7 +11,6 @@ export function useDashboard() {
     dispatch(setLoading());
     try {
       const response = await GetDashboard(startTime, endTime);
-      
       if (response.data.success) {
         dispatch(setDashboardData(response.data.data)); 
       } else {
@@ -23,7 +22,6 @@ export function useDashboard() {
     }
   }, [dispatch]);
 
-  // Accept dates for the export
   const downloadCsv = async (startTime, endTime) => {
     try {
       const response = await ExportCsv(startTime, endTime);

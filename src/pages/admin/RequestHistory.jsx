@@ -5,11 +5,22 @@ import {
 } from "lucide-react";
 import { Sidebar } from "@/components/ui/Sidebar";
 import { GetRequestHistory } from "@/service/analytics";
+
 const toInputDate = (date) => date.toISOString().split('T')[0];
+
+const getMsDateRange = (startStr, endStr) => {
+  const start = new Date(startStr);
+  const end = new Date(endStr);
+  start.setHours(0, 0, 0, 0);
+  end.setHours(23, 59, 59, 999);
+  return { startTime: start.getTime(), endTime: end.getTime() };
+};
+
 export function RequestHistory() {
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+
   const [startDate, setStartDate] = useState(() => {
     const d = new Date();
     d.setDate(d.getDate() - 7);
@@ -20,17 +31,19 @@ export function RequestHistory() {
   const [serviceName, setServiceName] = useState("");
   const [statusCode, setStatusCode] = useState("");
   const [minLatency, setMinLatency] = useState("");
+  
   const [offset, setOffset] = useState(0);
   const limit = 20;
+
   const fetchData = useCallback(async () => {
     setIsLoading(true);
     setError(null);
     try {
-      const startMs = new Date(startDate).getTime();
-      const endMs = new Date(endDate).getTime();
+      const { startTime, endTime } = getMsDateRange(startDate, endDate);
+      
       const params = {
-        startTime: startMs,
-        endTime: endMs,
+        startTime,
+        endTime,
         limit,
         offset,
       };
@@ -38,6 +51,7 @@ export function RequestHistory() {
       if (serviceName) params.serviceName = serviceName;
       if (statusCode) params.statusCode = statusCode;
       if (minLatency) params.minLatency = minLatency;
+
       const res = await GetRequestHistory(params);
       if (res.data.success) {
         setData(res.data.data);
@@ -48,12 +62,14 @@ export function RequestHistory() {
       setIsLoading(false);
     }
   }, [startDate, endDate, offset, method, serviceName, statusCode, minLatency]);
+
   useEffect(() => {
     const timer = setTimeout(() => {
       fetchData();
     }, 0);
     return () => clearTimeout(timer);
   }, [fetchData]);
+
   const handleApplyFilter = () => {
     if (offset !== 0) {
       setOffset(0);
@@ -61,15 +77,18 @@ export function RequestHistory() {
       fetchData();
     }
   };
+
   return (
     <div className="min-h-screen bg-[#050505] text-white flex font-sans">
       <Sidebar />
       <main className="flex-1 md:ml-64 p-6 md:p-10 w-full overflow-x-hidden">
+        
         <div className="flex flex-col mb-8 gap-6">
           <div>
             <h1 className="text-3xl font-bold text-white tracking-tight">Request History</h1>
             <p className="text-sm text-gray-400 mt-1">Detailed logs of all incoming requests.</p>
           </div>
+          
           <div className="flex flex-wrap items-end gap-3 bg-[#0f0f13]/90 border border-white/10 rounded-2xl p-4 shadow-lg">
             <div className="flex flex-col">
               <label className="text-[10px] uppercase text-gray-500 font-semibold mb-1 ml-1">Start Date</label>
@@ -118,8 +137,10 @@ export function RequestHistory() {
             </button>
           </div>
         </div>
+
         {isLoading && !data && <div className="flex justify-center py-20"><RefreshCw className="w-8 h-8 text-sky-500 animate-spin" /></div>}
         {error && <div className="text-red-400 p-4 bg-red-500/10 rounded-xl">{error}</div>}
+
         {data && (
           <>
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="bg-[#0f0f13]/80 backdrop-blur-xl border border-white/5 rounded-2xl overflow-hidden mb-6">
@@ -163,6 +184,7 @@ export function RequestHistory() {
                 </table>
               </div>
             </motion.div>
+
             <div className="flex justify-between items-center bg-[#0f0f13]/80 border border-white/5 rounded-2xl p-4">
               <span className="text-sm text-gray-400">
                 Showing <span className="font-medium text-white">{offset + 1}</span> to <span className="font-medium text-white">{offset + data.records.length}</span>

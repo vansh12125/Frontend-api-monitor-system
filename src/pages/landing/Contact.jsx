@@ -62,8 +62,8 @@ export function Contact() {
   };
 
   const contactInfo = [
-    { icon: 'M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z', label: 'Email', value: 'hello@apipulse.dev' },
-    { icon: 'M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z M15 11a3 3 0 11-6 0 3 3 0 016 0z', label: 'Location', value: 'San Francisco, CA' },
+    { icon: 'M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z', label: 'Email', value: 'vanshsahu6752@gmail.com' },
+    { icon: 'M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z M15 11a3 3 0 11-6 0 3 3 0 016 0z', label: 'Location', value: 'Uttar Pradesh, India' },
     { icon: 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z', label: 'Response Time', value: 'Within 24 hours' },
   ];
 
@@ -115,8 +115,8 @@ export function Contact() {
             ) : (
               <form onSubmit={handleSubmit} className="space-y-5">
                 <div className="grid md:grid-cols-2 gap-4">
-                  <InputField label="Name" name="name" placeholder="John Doe" value={formData.name} onChange={handleChange} error={errors.name} />
-                  <InputField label="Email" name="email" type="email" placeholder="john@example.com" value={formData.email} onChange={handleChange} error={errors.email} />
+                  <InputField label="Name" name="name" placeholder="Tony Stark" value={formData.name} onChange={handleChange} error={errors.name} />
+                  <InputField label="Email" name="email" type="email" placeholder="tony@example.com" value={formData.email} onChange={handleChange} error={errors.email} />
                 </div>
                 <InputField label="Subject" name="subject" placeholder="How can we help?" value={formData.subject} onChange={handleChange} error={errors.subject} />
                 

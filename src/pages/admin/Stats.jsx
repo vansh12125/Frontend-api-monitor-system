@@ -6,7 +6,17 @@ import {
 } from "lucide-react";
 import { Sidebar } from "@/components/ui/Sidebar";
 import { GetOverallStats } from "@/service/analytics";
+
 const toInputDate = (date) => date.toISOString().split('T')[0];
+
+const getIsoDateRange = (startStr, endStr) => {
+  const start = new Date(startStr);
+  const end = new Date(endStr);
+  start.setHours(0, 0, 0, 0);
+  end.setHours(23, 59, 59, 999);
+  return { startTime: start.toISOString(), endTime: end.toISOString() };
+};
+
 const StatCard = ({ title, value, icon: Icon, colorClass, bgClass, subtitle, delay }) => (
   <motion.div 
     initial={{ opacity: 0, y: 20 }}
@@ -26,23 +36,25 @@ const StatCard = ({ title, value, icon: Icon, colorClass, bgClass, subtitle, del
     {subtitle && <p className="text-xs text-gray-500">{subtitle}</p>}
   </motion.div>
 );
+
 export function Stats() {
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+
   const [startDate, setStartDate] = useState(() => {
     const d = new Date();
     d.setDate(d.getDate() - 30);
     return toInputDate(d);
   });
   const [endDate, setEndDate] = useState(() => toInputDate(new Date()));
+
   const fetchStats = useCallback(async () => {
     setIsLoading(true);
     setError(null);
     try {
-      const startIso = new Date(startDate).toISOString();
-      const endIso = new Date(endDate).toISOString();
-      const res = await GetOverallStats(startIso, endIso);
+      const { startTime, endTime } = getIsoDateRange(startDate, endDate);
+      const res = await GetOverallStats(startTime, endTime);
       if (res.data.success) {
         setData(res.data.data);
       }
@@ -52,21 +64,25 @@ export function Stats() {
       setIsLoading(false);
     }
   }, [startDate, endDate]);
+
   useEffect(() => {
     const timer = setTimeout(() => {
       fetchStats();
     }, 0);
     return () => clearTimeout(timer);
   }, [fetchStats]);
+
   return (
     <div className="min-h-screen bg-[#050505] text-white flex font-sans">
       <Sidebar />
       <main className="flex-1 md:ml-64 p-6 md:p-10 w-full overflow-x-hidden">
+        
         <div className="flex flex-col xl:flex-row justify-between items-start xl:items-center gap-6 mb-8">
           <div>
             <h1 className="text-3xl font-bold text-white tracking-tight">Overall Stats</h1>
             <p className="text-sm text-gray-400 mt-1">Aggregate performance across all services.</p>
           </div>
+          
           <div className="flex flex-col sm:flex-row items-center gap-3 bg-[#0f0f13]/90 border border-white/10 rounded-2xl p-3 shadow-lg">
             <div className="flex flex-col">
               <label className="text-[10px] uppercase tracking-wider text-gray-500 font-semibold mb-1 ml-1">Start Time</label>
@@ -88,8 +104,10 @@ export function Stats() {
             </button>
           </div>
         </div>
+
         {isLoading && !data && <div className="flex justify-center py-20"><RefreshCw className="w-8 h-8 text-sky-500 animate-spin" /></div>}
         {error && <div className="text-red-400 p-4 bg-red-500/10 rounded-xl">{error}</div>}
+
         {data && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <StatCard title="Total Hits" value={data.totalHits} icon={Activity} colorClass="text-sky-400" bgClass="bg-sky-500/10" delay={0.1} />
@@ -100,6 +118,7 @@ export function Stats() {
             <StatCard title="Unique Endpoints" value={data.uniqueEndpoints} icon={Database} colorClass="text-indigo-400" bgClass="bg-indigo-500/10" delay={0.6} />
           </div>
         )}
+
       </main>
     </div>
   );

@@ -1,8 +1,8 @@
 import 'lenis/dist/lenis.css';
 import Lenis from 'lenis';
-import {useEffect} from "react";
+import { useEffect } from "react";
 
-const useLenis = () => {
+export function useLenis() {
   useEffect(() => {
     const lenis = new Lenis({
       duration: 1.1,
@@ -11,14 +11,16 @@ const useLenis = () => {
       smoothHandheld: true,
     });
 
+    let rafId;
     function raf(time) {
       lenis.raf(time);
-      requestAnimationFrame(raf);
+      rafId = requestAnimationFrame(raf);
     }
-    requestAnimationFrame(raf);
+    rafId = requestAnimationFrame(raf);
 
-    return () => lenis.destroy();
+    return () => {
+      cancelAnimationFrame(rafId);
+      lenis.destroy();
+    };
   }, []);
-};
-
-export {useLenis};
+}

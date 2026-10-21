@@ -11,7 +11,8 @@ import {
   Key,
   Users,
   History,
-  BarChart2
+  BarChart2,
+  BookOpen
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 export function Sidebar() {
@@ -23,6 +24,7 @@ export function Sidebar() {
     { name: "Dashboard", icon: LayoutDashboard, path: "/dashboard" },
     { name: "Top Endpoints", icon: Activity, path: "/endpoints" },
     { name: "Stats", icon: BarChart2, path: "/stats" },
+    { name: "Integration Guide", icon: BookOpen, path: "/integration-guide" },
   ];
   const adminMenuItems = [
     { name: "API Keys", icon: Key, path: "/api-keys" },
@@ -34,14 +36,12 @@ export function Sidebar() {
   ];
   return (
     <>
-      
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="md:hidden fixed top-4 left-4 z-50 p-2 bg-[#0f0f13] border border-white/10 rounded-xl text-white"
       >
         {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
       </button>
-      
       <div
         className={`
           fixed inset-y-0 left-0 z-40 w-64 bg-[#0a0a0c] border-r border-white/5 flex flex-col
@@ -49,7 +49,6 @@ export function Sidebar() {
           ${isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}
         `}
       >
-        
         <div className="h-20 flex items-center px-6 border-b border-white/5">
           <Link to="/dashboard" className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-lg bg-linear-to-br from-sky-400 to-blue-600 flex items-center justify-center">
@@ -58,7 +57,6 @@ export function Sidebar() {
             <span className="text-lg font-bold text-white tracking-tight">API Pulse</span>
           </Link>
         </div>
-        
         <div className="flex-1 overflow-y-auto py-6 px-3 space-y-6">
           <div>
             <p className="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Menu</p>
@@ -87,7 +85,6 @@ export function Sidebar() {
             </div>
           </div>
         </div>
-        
         <div className="p-3 border-t border-white/5">
           <button
             onClick={logoutUser}
@@ -98,7 +95,6 @@ export function Sidebar() {
           </button>
         </div>
       </div>
-      
       {isOpen && (
         <div
           className="md:hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-30"

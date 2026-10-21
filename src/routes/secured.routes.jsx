@@ -1,5 +1,5 @@
 import { SecuredLayout } from "@/components/layout";
-import { Dashboard,Settings } from "@/pages/dashboard";
+import { Dashboard,Settings,IntegrationGuide } from "@/pages/dashboard";
 
 export const securedRoutes = [
   {
@@ -7,6 +7,7 @@ export const securedRoutes = [
     children: [
       { path: "/dashboard", element: <Dashboard /> },
       { path: "/settings", element: <Settings /> },
+      {  path: "integration-guide", element:<IntegrationGuide/>}
     ],
   },
 ];

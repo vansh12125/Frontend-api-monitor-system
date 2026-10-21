@@ -52,9 +52,8 @@ export function About() {
           </p>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-24">
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-24">
           {[
-            { value: "10K+", label: "Developers" },
             { value: "99.99%", label: "Uptime" },
             { value: "2.5B", label: "API Calls/mo" },
             { value: "24/7", label: "Support" },
@@ -74,21 +73,16 @@ export function About() {
         </div>
 
         <div className="mb-24">
-          <h2 className="text-2xl font-serif text-white mb-6">Our Story</h2>
+          <h2 className="text-2xl font-serif text-white mb-6">About Me</h2>
           <div className="space-y-4 text-sm text-gray-400 leading-relaxed">
-            <p>
-              In 2022, our founders were running a fast-growing SaaS platform.
-              They had tried every monitoring tool on the market — and every
-              single one fell short.
+             <p>
+              Hi, I'm Vansh Sahu. I built API Pulse primarily as a hands-on learning project to dive deep into full-stack development, system architecture, and modern web technologies. 
             </p>
             <p>
-              So they built their own. What started as an internal tool quickly
-              became something bigger. When other engineering teams saw it, they
-              asked for access.
+              This project gave me the opportunity to gain practical knowledge in building scalable APIs, handling real-time data streams, implementing secure authentication, and designing intuitive user interfaces. Every challenge faced and feature built was a step toward becoming a better engineer.
             </p>
             <p>
-              Today, we're a remote-first team of 25 engineers, designers, and
-              builders spread across 8 countries.
+              Thanks for checking out my work!
             </p>
           </div>
         </div>

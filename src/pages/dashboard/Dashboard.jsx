@@ -11,9 +11,19 @@ import {
 import { useAuth } from "@/hooks/useAuth";
 import { useDashboard } from "@/hooks/useDashboard";
 import { Sidebar } from "@/components/ui/Sidebar";
+
 const toInputDate = (date) => {
   return date.toISOString().split('T')[0];
 };
+
+const getIsoDateRange = (startStr, endStr) => {
+  const start = new Date(startStr);
+  const end = new Date(endStr);
+  start.setHours(0, 0, 0, 0);
+  end.setHours(23, 59, 59, 999);
+  return { startTime: start.toISOString(), endTime: end.toISOString() };
+};
+
 const StatCard = ({ title, value, icon: Icon, colorClass, bgClass, subtitle, delay }) => (
   <motion.div 
     initial={{ opacity: 0, y: 20 }}
@@ -33,24 +43,27 @@ const StatCard = ({ title, value, icon: Icon, colorClass, bgClass, subtitle, del
     {subtitle && <p className="text-xs text-gray-500">{subtitle}</p>}
   </motion.div>
 );
+
 export function Dashboard() {
   const { user } = useAuth();
   const { data, isLoading, error, fetchDashboard, downloadCsv } = useDashboard();
+
   const [startDate, setStartDate] = useState(() => {
     const d = new Date();
     d.setDate(d.getDate() - 30);
     return toInputDate(d);
   });
   const [endDate, setEndDate] = useState(() => toInputDate(new Date()));
+
   useEffect(() => {
     const timer = setTimeout(() => {
       if (new Date(startDate) > new Date(endDate)) return;
-      const startIso = new Date(startDate).toISOString();
-      const endIso = new Date(endDate).toISOString();
-      fetchDashboard(startIso, endIso);
+      const { startTime, endTime } = getIsoDateRange(startDate, endDate);
+      fetchDashboard(startTime, endTime);
     }, 500);
     return () => clearTimeout(timer);
   }, [startDate, endDate, fetchDashboard]);
+
   if (isLoading && !data) {
     return (
       <div className="min-h-screen bg-[#050505] flex flex-col md:flex-row">
@@ -61,6 +74,7 @@ export function Dashboard() {
       </div>
     );
   }
+
   if (error && !data) {
     return (
       <div className="min-h-screen bg-[#050505] flex flex-col md:flex-row">
@@ -70,9 +84,8 @@ export function Dashboard() {
           <p>{error}</p>
           <button 
             onClick={() => {
-              const startIso = new Date(startDate).toISOString();
-              const endIso = new Date(endDate).toISOString();
-              fetchDashboard(startIso, endIso);
+              const { startTime, endTime } = getIsoDateRange(startDate, endDate);
+              fetchDashboard(startTime, endTime);
             }} 
             className="mt-4 px-4 py-2 bg-white/10 rounded-xl hover:bg-white/20"
           >
@@ -82,7 +95,9 @@ export function Dashboard() {
       </div>
     );
   }
+
   if (!data || !data.summary) return null;
+
   const chartData = data.metrics.reduce((acc, curr) => {
     const date = new Date(curr.time_bucket).toLocaleDateString("en-US", { month: "short", day: "numeric" });
     const existing = acc.find((item) => item.date === date);
@@ -94,22 +109,30 @@ export function Dashboard() {
     }
     return acc;
   }, []).sort((a, b) => new Date(a.date) - new Date(b.date));
+
   const pieData = [
     { name: "Success", value: data.summary.successRate, color: "#10b981" },
     { name: "Errors", value: data.summary.errorRate, color: "#ef4444" },
   ];
+
   const isAdmin = user?.role === "CLIENT_ADMIN";
+
   return (
     <div className="min-h-screen bg-[#050505] text-white flex font-sans selection:bg-sky-500/30">
       <Sidebar />
+      
       <main className="flex-1 md:ml-64 p-6 md:p-10 w-full overflow-x-hidden">
+        
         <div className="flex flex-col xl:flex-row justify-between items-start xl:items-center gap-6 mb-8">
           <div>
             <h1 className="text-3xl font-bold text-white tracking-tight">Dashboard</h1>
             <p className="text-sm text-gray-400 mt-1">Monitor your API performance and health.</p>
           </div>
+          
           <div className="flex flex-col lg:flex-row items-center gap-4 w-full xl:w-auto">
+            
             <div className="flex flex-col sm:flex-row items-center gap-3 bg-[#0f0f13]/90 border border-white/10 rounded-2xl p-3 w-full lg:w-auto shadow-lg">
+              
               <div className="flex flex-col w-full sm:w-auto">
                 <label className="text-[10px] uppercase tracking-wider text-gray-500 font-semibold mb-1 ml-1">Start Time</label>
                 <div className="flex items-center gap-2 bg-black/40 border border-white/5 rounded-xl px-3 py-2">
@@ -123,7 +146,9 @@ export function Dashboard() {
                   />
                 </div>
               </div>
+
               <span className="hidden sm:block text-gray-600 mt-4">-</span>
+
               <div className="flex flex-col w-full sm:w-auto">
                 <label className="text-[10px] uppercase tracking-wider text-gray-500 font-semibold mb-1 ml-1">End Time</label>
                 <div className="flex items-center gap-2 bg-black/40 border border-white/5 rounded-xl px-3 py-2">
@@ -137,11 +162,11 @@ export function Dashboard() {
                   />
                 </div>
               </div>
+
               <button 
                 onClick={() => {
-                  const startIso = new Date(startDate).toISOString();
-                  const endIso = new Date(endDate).toISOString();
-                  fetchDashboard(startIso, endIso);
+                  const { startTime, endTime } = getIsoDateRange(startDate, endDate);
+                  fetchDashboard(startTime, endTime);
                 }}
                 disabled={isLoading}
                 className="w-full sm:w-auto mt-2 sm:mt-4 p-2.5 bg-sky-500 hover:bg-sky-400 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-xl transition-all shadow-[0_0_15px_rgba(56,189,248,0.3)] flex justify-center items-center gap-2"
@@ -150,12 +175,12 @@ export function Dashboard() {
                 <span className="sm:hidden text-xs font-medium">Apply</span>
               </button>
             </div>
+
             <div className="flex items-center gap-3 w-full lg:w-auto mt-2 lg:mt-0">
               <button 
                 onClick={() => {
-                  const startIso = new Date(startDate).toISOString();
-                  const endIso = new Date(endDate).toISOString();
-                  fetchDashboard(startIso, endIso);
+                  const { startTime, endTime } = getIsoDateRange(startDate, endDate);
+                  fetchDashboard(startTime, endTime);
                 }}
                 disabled={isLoading}
                 className="flex-1 lg:flex-none flex items-center justify-center gap-2 px-5 py-3.5 bg-white/5 hover:bg-white/10 disabled:opacity-50 disabled:cursor-not-allowed border border-white/10 rounded-xl text-sm font-medium transition-all"
@@ -163,12 +188,11 @@ export function Dashboard() {
                 <RefreshCw className={`w-4 h-4 ${isLoading ? "animate-spin" : ""}`} />
                 Refresh
               </button>
-              {isAdmin && (
+            {isAdmin && (
   <button 
     onClick={() => {
-      const startIso = new Date(startDate).toISOString();
-      const endIso = new Date(endDate).toISOString();
-      downloadCsv(startIso, endIso);
+      const { startTime, endTime } = getIsoDateRange(startDate, endDate);
+      downloadCsv(startTime, endTime);
     }}
     disabled={isLoading}
     className="flex-1 lg:flex-none flex items-center justify-center gap-2 px-5 py-3.5 bg-sky-500 hover:bg-sky-400 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-xl text-sm font-medium transition-all shadow-[0_0_15px_rgba(56,189,248,0.3)]"
@@ -178,14 +202,17 @@ export function Dashboard() {
   </button>
 )}
             </div>
+
           </div>
         </div>
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
           <StatCard title="Total Requests" value={data.summary.totalHits} icon={Activity} colorClass="text-sky-400" bgClass="bg-sky-500/10" delay={0.1} />
           <StatCard title="Error Rate" value={`${data.summary.errorRate}%`} icon={AlertTriangle} colorClass="text-red-400" bgClass="bg-red-500/10" subtitle={`${data.summary.errorHits} failed requests`} delay={0.2} />
           <StatCard title="Success Rate" value={`${data.summary.successRate}%`} icon={CheckCircle2} colorClass="text-green-400" bgClass="bg-green-500/10" subtitle={`${data.summary.totalHits - data.summary.errorHits} successful`} delay={0.3} />
           <StatCard title="Avg Latency" value={`${data.summary.avgLatency}ms`} icon={Clock} colorClass="text-yellow-400" bgClass="bg-yellow-500/10" delay={0.4} />
         </div>
+
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.5 }} className="lg:col-span-2 bg-[#0f0f13]/80 backdrop-blur-xl border border-white/5 rounded-2xl p-6">
             <div className="flex justify-between items-center mb-6">
@@ -218,6 +245,7 @@ export function Dashboard() {
               </ResponsiveContainer>
             </div>
           </motion.div>
+
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.6 }} className="bg-[#0f0f13]/80 backdrop-blur-xl border border-white/5 rounded-2xl p-6 flex flex-col">
             <h2 className="text-lg font-semibold text-white mb-2">Health Overview</h2>
             <p className="text-xs text-gray-400 mb-6">Success vs Error distribution</p>
@@ -248,6 +276,7 @@ export function Dashboard() {
             </div>
           </motion.div>
         </div>
+
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.7 }} className="bg-[#0f0f13]/80 backdrop-blur-xl border border-white/5 rounded-2xl overflow-hidden">
           <div className="p-6 border-b border-white/5">
             <h2 className="text-lg font-semibold text-white">Top Endpoints</h2>

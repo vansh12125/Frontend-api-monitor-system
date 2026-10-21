@@ -32,10 +32,14 @@ apiClient.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
+    const isAuthRoute = originalRequest.url.includes("/auth/me") || originalRequest.url.includes("/auth/refresh");
+    const isOnAuthPage = window.location.pathname === "/signin" || window.location.pathname === "/signup";
     if (
       error.response?.status === 401 &&
       error.response?.data?.error?.code === "AUTHENTICATION_REQUIRED" &&
-      !originalRequest._retry
+      !originalRequest._retry &&
+      !isAuthRoute &&
+      !isOnAuthPage
     ) {
       if (isRefreshing) {
         return new Promise(function (resolve, reject) {
@@ -63,6 +67,6 @@ apiClient.interceptors.response.use(
       }
     }
     return Promise.reject(error);
-  },
+  }
 );
 export { baseURL, apiClient };

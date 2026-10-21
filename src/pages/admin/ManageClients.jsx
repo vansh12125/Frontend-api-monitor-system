@@ -210,7 +210,7 @@ export function ManageClients() {
                     value={formData.name} 
                     onChange={(e) => setFormData({...formData, name: e.target.value})} 
                     className={`w-full bg-white/5 border ${formErrors.name ? 'border-red-500/50' : 'border-white/10'} rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-sky-500/50`} 
-                    placeholder="e.g. John Doe" 
+                    placeholder="e.g. Tony Stark" 
                   />
                   {formErrors.name && <p className="text-red-400 text-[10px] mt-1 ml-1">{formErrors.name}</p>}
                 </div>
@@ -224,7 +224,7 @@ export function ManageClients() {
                     value={formData.email} 
                     onChange={(e) => setFormData({...formData, email: e.target.value})} 
                     className={`w-full bg-white/5 border ${formErrors.email ? 'border-red-500/50' : 'border-white/10'} rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-sky-500/50`} 
-                    placeholder="john@example.com" 
+                    placeholder="tony@example.com" 
                   />
                   {formErrors.email && <p className="text-red-400 text-[10px] mt-1 ml-1">{formErrors.email}</p>}
                 </div>
