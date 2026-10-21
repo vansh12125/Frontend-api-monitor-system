@@ -17,5 +17,5 @@ export const ActivateApiKey = async (data) => {
 };
 
 export const DeleteApiKey = async (data) => {
-  return await apiClient.delete("/client/api-keys", data);
+  return await apiClient.delete("/client/api-keys", { data });
 };

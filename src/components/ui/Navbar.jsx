@@ -62,7 +62,7 @@ export function Navbar({ isLandingPage = false }) {
 
   return (
     <>
-      {}
+      
       <div className="fixed top-6 left-0 right-0 z-50 hidden md:flex justify-center px-4 pointer-events-none">
         <nav
           className={`
@@ -118,7 +118,7 @@ export function Navbar({ isLandingPage = false }) {
           </button>
         </nav>
       </div>
-      {}
+      
       <button
         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
         className="md:hidden fixed top-6 right-6 z-50 w-12 h-12 rounded-full bg-white/10 backdrop-blur-2xl border border-white/20 flex items-center justify-center text-white shadow-[0_8px_32px_rgba(0,0,0,0.5),inset_0_1px_0_rgba(255,255,255,0.2)] active:scale-95 transition-transform"
@@ -154,19 +154,19 @@ export function Navbar({ isLandingPage = false }) {
           </svg>
         )}
       </button>
-      {}
+      
       <div
         className={`
           md:hidden fixed inset-0 z-40 transition-all duration-300
           ${isMobileMenuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}
         `}
       >
-        {}
+        
         <div
           className="absolute inset-0 bg-black/60 backdrop-blur-md"
           onClick={() => setIsMobileMenuOpen(false)}
         ></div>
-        {}
+        
         <div
           className={`
             absolute top-20 right-4 w-64 bg-[#0a0a0a]/95 backdrop-blur-2xl border border-white/10 rounded-3xl p-5 shadow-2xl

@@ -51,4 +51,11 @@ const VALIDATION = Object.freeze({
   },
 });
 
-export { VALIDATION };
+const API_ENIVORNMENT = Object.freeze({
+  PRODUCTION: "PRODUCTION",
+  STAGING: "STAGING",
+  DEVELOPMENT: "DEVELOPMENT",
+  TESTING: "TESTING",
+});
+
+export { VALIDATION, API_ENIVORNMENT };
